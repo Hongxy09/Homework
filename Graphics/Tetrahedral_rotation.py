@@ -12,14 +12,12 @@ from mpl_toolkits.mplot3d import Axes3D
 
 def get_point():
     # 输入ABCD四个点坐标got ABCD分别在xoy，yoz，xoz和x轴上
-    pointA = [6, 0, 0]
-    pointB = [3, 6, 0]
-    pointC = [0, 0, 0]
-    pointD = [3, 0, 3]
+    pointA = [0, 0, 3]
+    pointB = [0, 0, 0]
+    pointC = [0, 6, 0]
+    pointD = [3, 3, 3]
     point_list = [pointA, pointB, pointC, pointD]
     point_list = np.array(point_list)
-    # if rotate==True:
-    #     point_list=
     return point_list
 
 
@@ -166,13 +164,11 @@ def new_all_line_list(all_line_list):
         for line_index in range(3):
             line = all_line_list[panner_index][line_index][2]
             true_line_list.append(line)
-
     res_line_list = []
     for item in true_line_list:
         item_reverse = [-l for l in item]
         if not item in res_line_list and not item_reverse in res_line_list:
             res_line_list.append(item)
-
     # 记录边的顶点信息
     res_line_list_num = []
     for i in range(len(res_line_list)):
@@ -288,9 +284,9 @@ def draw_tetrahedral(view_point, inner, point_list, linecolor):
         view_point = np.array(view_point)
     fig = plt.figure(figsize=(12, 8), facecolor='lightyellow')
     ax = fig.gca(fc='whitesmoke', projection='3d')
-    ax.set_xlabel('X Label')
-    ax.set_ylabel('Y Label')
-    ax.set_zlabel('Z Label')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
     eye_flag = get_panner_flag(view_point, point_list)
     # 画点
     draw_point(point_list, inner, view_point, ax)
@@ -316,20 +312,20 @@ def rotate(point_list, theta):
     rotate_matrix = np.zeros((3, 3))
     cos_value = np.cos(theta*np.pi/180)
     sin_value = np.sin(theta*np.pi/180)
-    rotate_matrix[0][0] = cos_value
-    rotate_matrix[0][1] = -sin_value
-    rotate_matrix[1][0] = sin_value
+    rotate_matrix[0][0] = 1
     rotate_matrix[1][1] = cos_value
-    rotate_matrix[2][2] = 1
+    rotate_matrix[1][2] = -sin_value
+    rotate_matrix[2][1] = sin_value
+    rotate_matrix[2][2] = cos_value
     new_point_list = np.dot(point_list, rotate_matrix)
     return new_point_list
 
 
 def fun():
     # 设置旋转角度，虚线颜色，视点坐标
-    theta = 120
-    linecolor = 'r'
-    view_point = [5,5,5]
+    theta = 150
+    linecolor = 'y'
+    view_point = [2,3,4]
     point_list = get_point()
     inner = get_inner_point(point_list)
     # 绘制旋转前的图形
@@ -338,3 +334,5 @@ def fun():
     rotated_point_list = rotate(point_list, theta)
     rotated_inner = get_inner_point(rotated_point_list)
     draw_tetrahedral(view_point, rotated_inner, rotated_point_list, linecolor)
+
+fun()
